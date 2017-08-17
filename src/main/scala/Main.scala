@@ -1,9 +1,18 @@
 import scala.util.Random
 
+
 object Main extends App {
+
   val weasel = "METHINKS IT IS LIKE A WEASEL"
-  println(weasel)
+  println("Target: " + weasel)
   val rnd = new Random()//1
+
+  /**
+    *
+    * @param fittest
+    * @param rnd
+    * @param count
+    */
   def loop(fittest: String, rnd: Random, count: Int): Unit = {
     println(count+": "+fittest)
     if (fittest != weasel) {
@@ -23,19 +32,40 @@ object Main extends App {
       loop(newFittest, strings._2, count+1)
     }
   }
+
   val mRndStr = Helpers.genRandString(weasel.length)(rnd)
   loop(mRndStr._1, mRndStr._2, 0)
+
 }
 
+
+/**
+  * A set of helper functions mostly for generating random stuff.
+  */
 object Helpers {
+
+  /**
+    *
+    * @param range The range from 0 to 'range'
+    * @return
+    */
   def genRandInt(range: Int): Random => (Int, Random) = rnd => (rnd.nextInt(range), rnd)
 
+  /**
+    *
+    * @return
+    */
   def genRandLetter: Random => (Char,Random) = rnd => {
     val mI = genRandInt(27)(rnd)
     val chr = (mI._1+'@').toChar
     (if (chr == '@') ' ' else chr, mI._2)
   }
 
+  /**
+    *
+    * @param length
+    * @return
+    */
   def genRandString(length: Int): Random => (String,Random) = rnd => {
     def loop(rnd: Random, str: String, length: Int): (String,Random) = {
       if (length > 0) {
@@ -48,6 +78,11 @@ object Helpers {
     loop(rnd, "", length)
   }
 
+  /**
+    *
+    * @param str
+    * @return
+    */
   def genPermutation(str: String): Random => (String,Random) = rnd => {
     def loop(rnd: Random, newStr: String, length: Int): (String,Random) = {
       if (length >= 0) {
@@ -65,6 +100,12 @@ object Helpers {
     loop(rnd, "", str.length-1)
   }
 
+  /**
+    *
+    * @param mut
+    * @param weasel
+    * @return
+    */
   def mutCmp(mut: String, weasel: String): Int = {
     def loop(index: Int, sum: Int): Int = {
       if (index < mut.length) {
@@ -76,6 +117,12 @@ object Helpers {
     loop(0, 0)
   }
 
+  /**
+    *
+    * @param strings
+    * @param weasel
+    * @return
+    */
   def getFittest(strings: List[String], weasel: String): String = {
     def loop(rest: List[String], bestScore: Int, fittest: String): String = rest match {
       case x::xs => {
@@ -90,6 +137,7 @@ object Helpers {
     }
     loop(strings.tail, 0, strings.head)
   }
+
 }
 
 
